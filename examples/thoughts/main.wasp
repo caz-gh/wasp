@@ -1,0 +1,48 @@
+app Thoughts {
+  title: "Thoughts"
+}
+
+auth {
+  userEntity: User,
+  methods: [ EmailAndPassword ],
+  onAuthFailedRedirectTo: "/login"
+}
+
+route "/" -> page Main
+page Main {
+  component: import Main from "@ext/MainPage.js",
+  authRequired: true
+}
+
+route "/login" -> page Login
+page Login {
+  component: import Login from "@ext/LoginPage.js"
+}
+
+route "/signup" -> page Signup
+page Signup {
+  component: import Signup from "@ext/SignupPage"
+}
+
+action createThought {
+  fn: import { createThought } from "@ext/actions.js",
+  entities: [Thought]
+}
+
+query getThoughts {
+  fn: import { getThoughts } from "@ext/queries.js",
+  entities: [Thought]
+}
+
+entity Thought {=psl
+    id          Int     @id @default(autoincrement())
+    text        String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+psl=}
+
+entity User {=psl
+    id          Int     @id @default(autoincrement())
+    email       String  @unique
+    password    String
+psl=}
